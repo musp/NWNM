@@ -1,0 +1,70 @@
+
+SisNoRegBr.directive('editorpdrDirective', function () {
+    return {
+        restrict: 'E',
+        scope: {
+            modelo: '=',
+            isdescarregaeditor:'='
+        },
+        controller: function ($scope) {
+            $scope.TextoAuxiliarMinuta = $scope.modelo;
+            //if (tinyMCE.activeEditor != null) {
+            //    tinyMCE.activeEditor.remove();
+            //}
+            tinyMCE.init({
+                fontsize_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt",
+                selector: "textoauxiliar",
+                theme: "modern",
+                language: 'pt_BR',
+                plugins: [
+                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime media nonbreaking save table contextmenu directionality",
+                    "template paste textcolor colorpicker textpattern lineheight"
+
+                ],
+                toolbar1: "undo redo | insertfile | styleselect fontsizeselect fontselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image print preview media | forecolor backcolor lineheight ",
+
+                image_advtab: true,
+                setup: function (ed) {
+                    ed.on('init', function () {
+                        this.getDoc().body.style.fontSize = '12pt';
+                        this.getDoc().body.style.fontFamily = 'arial';
+                    });
+                },
+                style_formats: [
+                { title: 'Espaçamento linha 1,0', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.0em' } },
+                { title: 'Espaçamento linha 1,1', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.1em' } },
+                { title: 'Espaçamento linha 1,2', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.2em' } },
+                { title: 'Espaçamento linha 1,3', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.3em' } },
+                { title: 'Espaçamento linha 1,4', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.4em' } },
+                { title: 'Espaçamento linha 1,5', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '1.5em' } },
+                { title: 'Espaçamento linha 2,0', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { lineHeight: '2.0em' } },
+                { title: 'Texto Maiúsculo', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { textTransform: 'uppercase' } },
+                { title: 'Texto Minúsculo', selector: 'p,div,h1,h2,h3,h4,h5,h6,span', styles: { textTransform: 'lowercase' } }
+                ]
+            });
+            $scope.carregaDadoParaEdicao = function () {
+                tinyMCE.EditorManager.execCommand('mceAddEditor', true, 'textoauxiliar');
+                //if (tinyMCE.activeEditor != null)
+                //    tinyMCE.activeEditor.setContent($scope.TextoAuxiliarMinuta.TextoAuxiliarPreenchido);
+            };
+            $scope.salvarDadosEditados = function () {
+                if (tinyMCE.activeEditor != null) {
+                    $scope.TextoAuxiliarMinuta.TextoAuxiliarPreenchido = tinyMCE.activeEditor.getContent();
+                    $scope.isdescarregaeditor = false;
+                    tinyMCE.activeEditor.remove();
+                }
+                if (tinyMCE.activeEditor == undefined) {
+                    $scope.isdescarregaeditor = false;
+                }
+            };
+        },
+        templateUrl: '/Modais/editorpdrDirective.html'
+    }
+});
+<div style="width:100%;margin-top:4px;">
+    <textarea id="textoauxiliar" style="width:100%" ng-model="TextoAuxiliarMinuta.TextoAuxiliarPreenchido" name="content"></textarea>
+    <button style="width:100%" ng-click="carregaDadoParaEdicao()">Carregar no Editor</button>
+    <button style="width:100%" ng-click="salvarDadosEditados()">Salvar</button>
+</div>
