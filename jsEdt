@@ -1,5 +1,5 @@
 
-SisNoRegBr.directive('editorpdrDirective', function () {
+app.directive('editorpdrDirective', function () {
     return {
         restrict: 'E',
         scope: {
